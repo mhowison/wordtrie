@@ -42,8 +42,8 @@ class WordTrie(object):
         for word in _check_list(words):
             word = _check_value_key(word)
             if not word in node:
-                node.children[word] = {}
-            node = node.children[word]
+                node[word] = {}
+            node = node[word]
         node[_VALUE_KEY_] = value
 
     def match(self, words):
@@ -54,8 +54,8 @@ class WordTrie(object):
         node  = self.root
         words = _check_list(words)
         for word in words:
-            if word in node.children:
-                node = node.children[word]
+            if word in node:
+                node = node[word]
             else:
                 return None
         return node.get(_VALUE_KEY_)
@@ -69,17 +69,19 @@ class WordTrie(object):
         node   = self.root
         match  = False
         values = []
-        words  = _check_list(words)
+        words  = iter(_check_list(words))
         word   = next(words, None)
-        while word is not None
+        while word is not None:
             word = _check_value_key(word)
-            if word in node.children:
+            if word in node:
                 # Start or continue a match.
-                node = node.children[word]
+                node = node[word]
                 match = True
             elif match:
                 # The end of a match. Concatenate the value.
                 values.append(node[_VALUE_KEY_])
+                # Restart the search.
+                node = self.root
                 match = False
             word = next(words, None)
         return values
