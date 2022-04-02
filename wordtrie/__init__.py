@@ -1,5 +1,5 @@
 """
-WordTrie: a simple trie (prefix tree) for word matching
+WordTrie: a simple trie (prefix tree) for word and phrase matching
 """
 
 import json

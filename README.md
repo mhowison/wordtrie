@@ -73,4 +73,4 @@ The reserved key `#` is used to store the value in the JSON structure. You can s
 
 Run the example above as a basic regression test with:
 
-    # grep "^    " README.md | sed 's/    //' | python`
+    # grep "^    " README.md | sed 's/    //' | python
