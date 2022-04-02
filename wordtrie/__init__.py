@@ -7,7 +7,7 @@ from importlib import resources
 
 __version__ = resources.read_text(__name__, "VERSION").strip()
 
-_VALUE_KEY_ = "@@VALUE@@" # Reserved value key
+_VALUE_KEY_ = "#" # Reserved value key
 
 def _check_value_key(word):
     """
@@ -54,6 +54,7 @@ class WordTrie(object):
         node  = self.root
         words = _check_list(words)
         for word in words:
+            word = _check_value_key(word)
             if word in node:
                 node = node[word]
             else:
@@ -86,13 +87,13 @@ class WordTrie(object):
             word = next(words, None)
         return values
 
-    def to_json(self, filename):
+    def to_json(self, filename, indent=2):
         """
         Write the trie structure to a json file in `filename`.
         CAUTION: will overrite an existing file with that name.
         """
         with open(filename, "w") as f:
-            json.dump(self.root, f)
+            json.dump(self.root, f, indent=indent)
 
     def from_json(self, filename):
         """
