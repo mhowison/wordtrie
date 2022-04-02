@@ -34,5 +34,6 @@ setup(
     ],
     provides=["wordtrie"],
     packages=find_packages(),
+    package_data={"wordtrie": ["VERSION"]},
     python_requires=">=3"
 )
