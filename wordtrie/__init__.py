@@ -80,7 +80,8 @@ class WordTrie(object):
                 match = True
             elif match:
                 # The end of a match. Concatenate the value.
-                values.append(node[_VALUE_KEY_])
+                if _VALUE_KEY_ in node:
+                    values.append(node[_VALUE_KEY_])
                 # Restart the search.
                 node = self.root
                 match = False
@@ -102,4 +103,5 @@ class WordTrie(object):
         same encoding of values.
         """
         with open(filename) as f:
-            data = json.load(f)
+            self.root = json.load(f)
+        return self
