@@ -70,9 +70,7 @@ class WordTrie(object):
         node   = self.root
         match  = False
         values = []
-        words  = iter(_check_list(words))
-        word   = next(words, None)
-        while word is not None:
+        for word in _check_list(words):
             word = _check_value_key(word)
             if word in node:
                 # Start or continue a match.
@@ -80,11 +78,11 @@ class WordTrie(object):
                 match = True
             elif match:
                 # The end of a match. Concatenate the value.
-                values.append(node[_VALUE_KEY_])
+                if _VALUE_KEY_ in node:
+                    values.append(node[_VALUE_KEY_])
                 # Restart the search.
                 node = self.root
                 match = False
-            word = next(words, None)
         return values
 
     def to_json(self, filename, indent=2):
@@ -102,4 +100,5 @@ class WordTrie(object):
         same encoding of values.
         """
         with open(filename) as f:
-            data = json.load(f)
+            self.root = json.load(f)
+        return self
