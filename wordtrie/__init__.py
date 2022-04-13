@@ -76,13 +76,22 @@ class WordTrie(object):
                 # Start or continue a match.
                 node = node[word]
                 match = True
-            elif match:
-                # The end of a match. Concatenate the value.
-                if _VALUE_KEY_ in node:
-                    values.append(node[_VALUE_KEY_])
+            else:
+                if match:
+                    # The end of a match. Concatenate the value.
+                    if _VALUE_KEY_ in node:
+                        values.append(node[_VALUE_KEY_])
                 # Restart the search.
-                node = self.root
-                match = False
+                if word in self.root:
+                    node = self.root[word]
+                    match = True
+                else:
+                    node = self.root
+                    match = False
+        if match:
+            # The final match. Concatenate the value.
+            if _VALUE_KEY_ in node:
+                values.append(node[_VALUE_KEY_])
         return values
 
     def to_json(self, filename, indent=2):
