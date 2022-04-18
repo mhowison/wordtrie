@@ -69,6 +69,14 @@ The reserved key `#` is used to store the value in the JSON structure. You can s
     print(trie.match("#She"))
     # 4
 
+When a node does not yet exist in the trie, the value specified in the `add()` method is used as the initial value. If the node already exists, then an aggregator function can be called to modify the value based on the old and new values. The default aggregator is to replace the old value with the new value. However, a custom aggregator can be defined as a function with signature `aggregator(old, new)` and passed to the `add()` call:
+
+    def sum_aggregator(old, new):
+        return old + new
+    trie.add("She", 100, aggregator=sum_aggregator)
+    print(trie.search("She sells sea shells by the sea shore."))
+    # [101, 3, 2]
+
 ## Testing
 
 Run the example above as a basic regression test with:

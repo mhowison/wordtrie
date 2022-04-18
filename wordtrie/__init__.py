@@ -28,15 +28,29 @@ def _check_list(words):
     else:
         return words
 
+def _default_aggregator(old, new):
+    """
+    Replace old value with new value.
+    """
+    return new
+
 class WordTrie(object):
 
     def __init__(self):
         self.root = {}
 
-    def add(self, words, value):
+    def add(self, words, value, aggregator=_default_aggregator):
         """
-        Add a list of `words` as nodes in the trie,
-        assigning `value` to the final node.
+        Add a list of `words` as nodes in the trie, assigning `value`
+        to the final node according to the aggregator function. The
+        default aggregator is to replace any existing value with the
+        newly added value.
+
+        You can specify a custom aggregator as function with signature
+        `aggregator(old, new)` that returns the value to assign to the
+        node. The aggregator function is only called if the node already
+        exists and has a value. In that case, value of `old` is the
+        existing value for the node and `new` is equal to `value`.
         """
         node = self.root
         for word in _check_list(words):
@@ -44,7 +58,11 @@ class WordTrie(object):
             if not word in node:
                 node[word] = {}
             node = node[word]
-        node[_VALUE_KEY_] = value
+        if _VALUE_KEY_ in node:
+            node[_VALUE_KEY_] = aggregator(node[_VALUE_KEY_], value)
+        else:
+            node[_VALUE_KEY_] = value
+
 
     def match(self, words):
         """
