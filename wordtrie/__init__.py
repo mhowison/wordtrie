@@ -79,37 +79,46 @@ class WordTrie(object):
                 return None
         return node.get(_VALUE_KEY_)
 
-    def search(self, words):
+    def search(self, words, return_nodes=False):
         """
         Search a stream of `words` against the trie, returning
         a concenation of values for all sub-sequences within the stream
         that match. Return an empty list if no matches are found.
+
+        If `return_nodes` is True, then the returned list contains
+        tuples `(node, value)` instead of bare values.
         """
         node   = self.root
-        match  = False
+        match  = []
         values = []
         for word in _check_list(words):
             word = _check_value_key(word)
             if word in node:
                 # Start or continue a match.
                 node = node[word]
-                match = True
+                match.append(word)
             else:
                 if match:
                     # The end of a match. Concatenate the value.
                     if _VALUE_KEY_ in node:
-                        values.append(node[_VALUE_KEY_])
+                        if return_nodes is True:
+                            values.append((match, node[_VALUE_KEY_]))
+                        else:
+                            values.append(node[_VALUE_KEY_])
                 # Restart the search.
                 if word in self.root:
                     node = self.root[word]
-                    match = True
+                    match = [word]
                 else:
                     node = self.root
-                    match = False
+                    match = []
         if match:
             # The final match. Concatenate the value.
             if _VALUE_KEY_ in node:
-                values.append(node[_VALUE_KEY_])
+                if return_nodes is True:
+                    values.append((match, node[_VALUE_KEY_]))
+                else:
+                    values.append(node[_VALUE_KEY_])
         return values
 
     def to_json(self, filename, indent=2):

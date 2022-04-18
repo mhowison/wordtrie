@@ -38,6 +38,12 @@ Matching is greedy and will match the maximal length phrase:
     print(trie.search("She sells sea shells by the sea shore."))
     # [1, 3, 2]
 
+In addition to the values, you can return the trie nodes that were
+matched with `return_nodes=True`:
+
+    print(trie.search("She sells sea shells by the sea shore.", return_nodes=True))
+    # [(['She'], 1), (['sea', 'shells'], 3), (['sea'], 2)]
+
 The trie can be written to a JSON file with:
 
     trie.to_json("sea.json")
